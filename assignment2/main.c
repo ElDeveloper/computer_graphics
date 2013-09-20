@@ -4,12 +4,6 @@
  *
  *  Write a three dimensional OpenGL visualization of the Lorenz Attractor.
  *
- *  Visibility
- *  'n' to switch cube count
- *  'm' to switch hidden surface mode
- *  'a' to toggle axes
- *  '0' snaps angles to 0,0
- *  arrows to rotate the world
 
  author: Yoshiki Vazquez Baeza
  e-mail: yoshiki89@gmail.com
@@ -31,12 +25,10 @@
 
 int th=0;         //  Azimuth of view angle
 int ph=0;         //  Elevation of view angle
-int axes=1;       //  Display axes
-int mode=0;       //  Depth mode
-int rev=0;        //  Reverse bottom of cube
-int n=1;          //  Number of cubes
 
-char* text[] = {"Face Culling","Face Culling with Z-sort","Z-buffer","Z-buffer + Face Culling"};
+double s  = 10;
+double b  = 2.6666;
+double r  = 28;
 
 //  Cosine and Sine in degrees
 #define Cos(x) (cos((x)*3.1415927/180))
@@ -75,8 +67,22 @@ double Zp(double x,double y,double z){
  *  OpenGL (GLUT) calls this routine to display the scene
  */
 void display(){
-	const double len=15;  //  Length of axes
+	const double len=5;  //  Length of axes
+
+	int i;
+	/*  Coordinates  */
+	double x = 1;
+	double y = 1;
+	double z = 1;
+	/*  Time step  */
+	double dt = 0.001;
+
+	double dx = 0;
+	double dy = 0;
+	double dz = 0;
+
 	//  Erase the window and the depth buffer
+	glClearColor(1, 1, 1, 1);
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
 	//  Undo previous transformations
@@ -94,35 +100,26 @@ void display(){
 	//  Draw axes
 	glBegin(GL_LINES);
 
-	double s  = 10;
-	double b  = 2.6666;
-	double r  = 28;
-
-	int i;
-	/*  Coordinates  */
-	double x = 1;
-	double y = 1;
-	double z = 1;
-	/*  Time step  */
-	double dt = 0.001;
-
 	glVertex3d( x/10, y/10, z/10);
 	/*
 	 *  Integrate 50,000 steps (50 time units with dt = 0.001)
 	 *  Explicit Euler integration
 	 */
 	for (i=0;i<50000;i++){
-		double dx = s*(y-x);
-		double dy = x*(r-z)-y;
-		double dz = x*y - b*z;
+		dx = s*(y-x);
+		dy = x*(r-z)-y;
+		dz = x*y - b*z;
 		x += dt*dx;
 		y += dt*dy;
 		z += dt*dz;
-		// printf("%5d %8.3f %8.3f %8.3f\n",i+1,x,y,z);
+		glColor3f(1/x,1/y,1/z);
 		glVertex3d( x/10, y/10, z/10);
 	}
 
 	glEnd();
+
+	// axes are white
+	glColor3f(0, 0, 0);
 
 	glBegin(GL_LINES);
 	glVertex3d(0.0,0.0,0.0);
@@ -131,7 +128,9 @@ void display(){
 	glVertex3d(0.0,len,0.0);
 	glVertex3d(0.0,0.0,0.0);
 	glVertex3d(0.0,0.0,len);
+	glEnd();
 
+	//  Label axes
 	glRasterPos3d(len,0.0,0.0);
 	Print("X");
 	glRasterPos3d(0.0,len,0.0);
@@ -139,15 +138,11 @@ void display(){
 	glRasterPos3d(0.0,0.0,len);
 	Print("Z");
 
-	glEnd();
-	//  Label axes
-
 	//  Five pixels from the lower left corner of the window
 	glWindowPos2i(5,5);
 	//  Print the text string
-	Print("Angle=%d,%d  Hidden=%s",th,ph,text[mode]);
+	Print("R: %.3f S: %.3f B: %.3f", r, s, b);
 
-	if (rev) Print(" Reverse");
 	//  Render the scene
 	glFlush();
 	//  Make the rendered scene visible
@@ -189,18 +184,28 @@ void key(unsigned char ch,int x,int y){
 	//  Reset view angle
 	else if (ch == '0')
 		th = ph = 0;
-	//  Toggle axes
-	else if (ch == 'a' || ch == 'A')
-		axes = 1-axes;
-	//  Toggle bottom CW/CCW
-	else if (ch == 'r' || ch == 'R')
-		rev = !rev;
-	//  Toggle Z-buffering
-	else if (ch == 'm' || ch == 'M')
-		mode = (mode+1)%4;
-	//  Switch number of cubes
-	else if (ch == 'n' || ch == 'N')
-		n = (n%Nk)+1;
+
+	// increase the value of s
+	else if (ch == 's')
+		s = s + 0.1;
+	// decrease the value of s
+	else if (ch == 'S')
+		s = s - 0.1;
+
+	// increase the value or r
+	else if (ch == 'r')
+		r = r + 0.1;
+	// decrease the value of r
+	else if (ch == 'R')
+		r = r - 0.1;
+
+	// increase the value of b
+	else if (ch == 'b')
+		b = b + 0.1;
+	// decrease the value of b
+	else if (ch == 'B')
+		b = b - 0.1;
+
 	//  Tell GLUT it is necessary to redisplay the scene
 	glutPostRedisplay();
 }
