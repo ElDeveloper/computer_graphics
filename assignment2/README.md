@@ -9,3 +9,5 @@ Drawing the Lorenz attractor.
 - To increase the value of s use `S` to decrease it use `s`.
 - To reset back to the initial viewing position use `0`.
 - To exit graciously use `ESC`.
+
+Time it took me to complete 5 hours.
