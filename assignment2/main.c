@@ -34,9 +34,6 @@ double r  = 28;
 #define Cos(x) (cos((x)*3.1415927/180))
 #define Sin(x) (sin((x)*3.1415927/180))
 
-//  Cubes
-#define Nk 6
-
 /*
  *  Convenience routine to output raster text
  *  Use VARARGS to make this more flexible
