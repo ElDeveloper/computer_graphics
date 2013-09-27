@@ -18,11 +18,13 @@ double cylinder_rotation=0; //  Rotation of cylinder
 int axes=1;       //  Display axes
 int mode=0;       //  What to display
 
-static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]);
+static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]);
 
-static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]){
+static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]){
 	double circle_points[steps][2];
 	float di=360/steps, angle=0;
+
+	// ideally we don't want to change it, but leave it there ... just in case
 	static float r = 1, h = 1;
 	int i = 0;
 
@@ -41,21 +43,17 @@ static void draw_cylinder(double x, double y, double z, unsigned int steps, floa
 	// other side
 	glBegin(GL_TRIANGLE_FAN);
 	glColor3f(colors[0][0], colors[0][1], colors[0][2]);
-	glVertex3d(x, y, z);
 	for (i=0; i<steps; i++){
 		glVertex3d(circle_points[i][0],circle_points[i][1], z);
 	}
-	glVertex3d(circle_points[0][0], circle_points[0][1], z);
 	glEnd();
 
 	// one side
 	glBegin(GL_TRIANGLE_FAN);
 	glColor3f(colors[1][0], colors[1][1], colors[1][2]);
-	glVertex3d(x, y, z+h);
 	for (i=0; i<steps; i++){
 		glVertex3d(circle_points[i][0],circle_points[i][1], z+h);
 	}
-	glVertex3d(circle_points[0][0], circle_points[0][1], z+h);
 	glEnd();
 
 	// draw the strip connecting the two circles using the differential value in
@@ -78,9 +76,11 @@ static void draw_cylinder(double x, double y, double z, unsigned int steps, floa
  *  OpenGL (GLUT) calls this routine to display the scene
  */
 void display(){
-	const double len=1.5;  //  Length of axes
+	const double len=4.5;  //  Length of axes
 
 	float cylinder_color_a[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+	float cylinder_color_b[3][3] = {{252.0/255.0, 141.0/255.0, 89/255.0},
+		{1, 1, 191/255.0}, {145/255.0, 207/255.0, 96/255.0}};
 
 	//  Erase the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -96,8 +96,14 @@ void display(){
 	glPushMatrix();
 	glRotatef(cylinder_rotation, 1, 0, 0);
 	glRotatef(cylinder_rotation/0.5, 0, 1, 0);
-	glScaled(0.5, 0.5, 1.1);
+	glScaled(0.9, 0.78, 0.4);
 	draw_cylinder(0, 0, 0, 500, cylinder_color_a);
+	glPopMatrix();
+
+	// cylinder one
+	glPushMatrix();
+	glScaled(2, 1.5, 0.4);
+	draw_cylinder(1, 1, 1, 500, cylinder_color_b);
 	glPopMatrix();
 
 	//  White
@@ -180,7 +186,7 @@ void key(unsigned char ch,int x,int y){
  *  GLUT calls this routine when the window is resized
  */
 void reshape(int width,int height){
-	const double dim=2.5;
+	const double dim=5;
 	//  Ratio of the width to the height of the window
 	double w2h = (height>0) ? (double)width/height : 1;
 	//  Set the viewport to the entire window
