@@ -13,13 +13,14 @@
 
 int th=0;         //  Azimuth of view angle
 int ph=0;         //  Elevation of view angle
-double zh=0;      //  Rotation of teapot
+
+double cylinder_rotation=0; //  Rotation of cylinder
 int axes=1;       //  Display axes
 int mode=0;       //  What to display
 
-static void draw_cilinder(double x, double y, double z, unsigned int steps);
+static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]);
 
-static void draw_cilinder(double x, double y, double z, unsigned int steps){
+static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]){
 	double circle_points[steps][2];
 	float di=360/steps, angle=0;
 	static float r = 1, h = 1;
@@ -39,6 +40,7 @@ static void draw_cilinder(double x, double y, double z, unsigned int steps){
 
 	// other side
 	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(colors[0][0], colors[0][1], colors[0][2]);
 	glVertex3d(x, y, z);
 	for (i=0; i<steps; i++){
 		glVertex3d(circle_points[i][0],circle_points[i][1], z);
@@ -48,6 +50,7 @@ static void draw_cilinder(double x, double y, double z, unsigned int steps){
 
 	// one side
 	glBegin(GL_TRIANGLE_FAN);
+	glColor3f(colors[1][0], colors[1][1], colors[1][2]);
 	glVertex3d(x, y, z+h);
 	for (i=0; i<steps; i++){
 		glVertex3d(circle_points[i][0],circle_points[i][1], z+h);
@@ -58,6 +61,7 @@ static void draw_cilinder(double x, double y, double z, unsigned int steps){
 	// draw the strip connecting the two circles using the differential value in
 	// height (Z) between the two circles; the value is the same for all other
 	glBegin(GL_QUAD_STRIP);
+	glColor3f(colors[2][0], colors[2][1], colors[2][2]);
 	for (i=0; i<steps; i++){
 		glVertex3d(circle_points[i][0],circle_points[i][1], z);
 		glVertex3d(circle_points[i][0],circle_points[i][1], z+h);
@@ -73,9 +77,11 @@ static void draw_cilinder(double x, double y, double z, unsigned int steps){
 /*
  *  OpenGL (GLUT) calls this routine to display the scene
  */
-void display()
-{
+void display(){
 	const double len=1.5;  //  Length of axes
+
+	float cylinder_color_a[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
+
 	//  Erase the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	//  Enable Z-buffering in OpenGL
@@ -86,13 +92,12 @@ void display()
 	glRotatef(ph,1,0,0);
 	glRotatef(th,0,1,0);
 
-	glColor3f(1,0,0);
-	//draw_cilinder(double x, double y, double z, double r, double h, unsigned int steps);
-
+	// cylinder one
 	glPushMatrix();
-	glRotatef(zh, 1, 0, 0);
-	//glScalef(0.5, 1, 0, 0);
-	draw_cilinder(0, 0, 0, 100);
+	glRotatef(cylinder_rotation, 1, 0, 0);
+	glRotatef(cylinder_rotation/0.5, 0, 1, 0);
+	glScaled(0.5, 0.5, 1.1);
+	draw_cylinder(0, 0, 0, 500, cylinder_color_a);
 	glPopMatrix();
 
 	//  White
@@ -129,8 +134,7 @@ void display()
 /*
  *  GLUT calls this routine when an arrow key is pressed
  */
-void special(int key,int x,int y)
-{
+void special(int key,int x,int y){
 	//  Right arrow key - increase angle by 5 degrees
 	if (key == GLUT_KEY_RIGHT)
 		th += 5;
@@ -153,8 +157,7 @@ void special(int key,int x,int y)
 /*
  *  GLUT calls this routine when a key is pressed
  */
-void key(unsigned char ch,int x,int y)
-{
+void key(unsigned char ch,int x,int y){
 	//  Exit on ESC
 	if (ch == 27)
 		exit(0);
@@ -176,8 +179,7 @@ void key(unsigned char ch,int x,int y)
 /*
  *  GLUT calls this routine when the window is resized
  */
-void reshape(int width,int height)
-{
+void reshape(int width,int height){
 	const double dim=2.5;
 	//  Ratio of the width to the height of the window
 	double w2h = (height>0) ? (double)width/height : 1;
@@ -198,18 +200,16 @@ void reshape(int width,int height)
 /*
  *  GLUT calls this toutine when there is nothing else to do
  */
-void idle()
-{
+void idle(){
 	double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
-	zh = fmod(90*t,360);
+	cylinder_rotation = fmod(90*t,360);
 	glutPostRedisplay();
 }
 
 /*
  *  Start up GLUT and tell it what to do
  */
-int main(int argc,char* argv[])
-{
+int main(int argc,char* argv[]){
 	//  Initialize GLUT and process user parameters
 	glutInit(&argc,argv);
 	//  Request double buffered, true color window with Z buffering at 600x600
