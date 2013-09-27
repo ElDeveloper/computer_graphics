@@ -29,7 +29,10 @@ csci5229.o:
 
 # change the name of the output to hwXXX
 $(EX):csci5229.o
-	$(CC) -Wall -O3 -lm -o $@ main.c $< $(CFLAGS)
+	$(CC) -Wall -O3 -lm -o hw3 main.c $< $(CFLAGS)
 
 clean:
-	rm -f $(EX) *.o *.gch
+	rm -f $(EX) *.o *.gch *.zip
+
+submit: clean
+	zip hw3.zip main.c csci5229.c csci5229.h Makefile README.md
