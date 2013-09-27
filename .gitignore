@@ -38,6 +38,9 @@ pip-log.txt
 *.tz
 *.zip
 
+# computer graphics examples
+ex*.c
+
 # compiled files
 main
 
