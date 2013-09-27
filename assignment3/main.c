@@ -18,8 +18,9 @@ double cylinder_rotation=0; //  Rotation of cylinder
 int axes=1;       //  Display axes
 int mode=0;       //  What to display
 
-static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]);
+float house_x, house_y, house_z, t_mobious=0;
 
+static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]);
 static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]){
 	double circle_points[steps][2];
 	float di=360/steps, angle=0;
@@ -72,6 +73,12 @@ static void draw_cylinder(double x, double y, double z, unsigned int steps, cons
 	glPopMatrix();
 }
 
+static void draw_house(double x, double y, double z, const float colors[3][3]);
+
+static void draw_house(double x, double y, double z, const float colors[3][3]){
+	draw_cylinder(x, y, z, 5, colors);
+}
+
 /*
  *  OpenGL (GLUT) calls this routine to display the scene
  */
@@ -81,6 +88,7 @@ void display(){
 	float cylinder_color_a[3][3] = {{1, 0, 0}, {0, 1, 0}, {0, 0, 1}};
 	float cylinder_color_b[3][3] = {{252.0/255.0, 141.0/255.0, 89/255.0},
 		{1, 1, 191/255.0}, {145/255.0, 207/255.0, 96/255.0}};
+
 
 	//  Erase the window and the depth buffer
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -100,10 +108,25 @@ void display(){
 	draw_cylinder(0, 0, 0, 500, cylinder_color_a);
 	glPopMatrix();
 
-	// cylinder one
+	// cylinder two
 	glPushMatrix();
-	glScaled(2, 1.5, 0.4);
-	draw_cylinder(1, 1, 1, 500, cylinder_color_b);
+	glScaled(0.5, 0.5, 0.5);
+	draw_cylinder(2, 2, 2, 500, cylinder_color_b);
+	glPopMatrix();
+
+	// house one
+	glPushMatrix();
+	draw_house(-2, -2, -2, cylinder_color_b);
+	glPopMatrix();
+
+	// house two
+	glPushMatrix();
+	draw_house(0.5, -.8, -2, cylinder_color_b);
+	glPopMatrix();
+
+
+	glPushMatrix();
+	draw_house(house_x, house_y, house_z, cylinder_color_a);
 	glPopMatrix();
 
 	//  White
@@ -209,6 +232,13 @@ void reshape(int width,int height){
 void idle(){
 	double t = glutGet(GLUT_ELAPSED_TIME)/1000.0;
 	cylinder_rotation = fmod(90*t,360);
+
+	t_mobious = fmod(t, 360);
+
+	house_x = (1 + 2*cos(0.5*t_mobious))*cos(t_mobious);
+	house_y = (1 + 2*sin(0.5*t_mobious))*sin(t_mobious);
+	house_z = 2*sin(0.5*t_mobious);
+
 	glutPostRedisplay();
 }
 
