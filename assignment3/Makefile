@@ -12,7 +12,7 @@ CC=gcc
 
 #  OSX
 ifeq ($(uname_S),Darwin)
-	CFLAGS += -framework GLUT -framework OpenGL
+	CFLAGS += -framework GLUT -framework OpenGL -lm
 	CC = clang # error/warnings are more verbose
 endif
 #  MinGW
@@ -29,7 +29,7 @@ csci5229.o:
 
 # change the name of the output to hwXXX
 $(EX):csci5229.o
-	$(CC) -Wall -O3 -lm -o hw3 main.c $< $(CFLAGS)
+	$(CC) -Wall -O3 -o hw3 main.c $< $(CFLAGS)
 
 clean:
 	rm -f $(EX) *.o *.gch *.zip

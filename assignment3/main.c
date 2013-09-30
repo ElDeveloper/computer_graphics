@@ -20,8 +20,8 @@ int mode=0;       //  What to display
 
 float house_x, house_y, house_z, t_mobious=0;
 
-static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]);
-static void draw_cylinder(double x, double y, double z, unsigned int steps, const float colors[3][3]){
+static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]);
+static void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]){
 	double circle_points[steps][2];
 	float di=360/steps, angle=0;
 
@@ -73,9 +73,9 @@ static void draw_cylinder(double x, double y, double z, unsigned int steps, cons
 	glPopMatrix();
 }
 
-static void draw_house(double x, double y, double z, const float colors[3][3]);
+static void draw_house(double x, double y, double z, float colors[3][3]);
 
-static void draw_house(double x, double y, double z, const float colors[3][3]){
+static void draw_house(double x, double y, double z, float colors[3][3]){
 	draw_cylinder(x, y, z, 5, colors);
 }
 
