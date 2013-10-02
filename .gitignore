@@ -43,6 +43,7 @@ ex*.c
 
 # compiled files
 main
+hw*
 
 # compiled source
 *.com
