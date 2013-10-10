@@ -13,6 +13,5 @@ Drawing a random scene with both perspectives.
 - Toggle the lights on and off using `l`.
 - Toggle the movement of the light using `m`.
 - To exit graciously use `ESC`.
- */
 
 Time it took me to complete 6 hours.
