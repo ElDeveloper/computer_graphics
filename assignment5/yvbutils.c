@@ -50,7 +50,7 @@ void draw_cylinder(double x, double y, double z, unsigned int steps, float color
 	glBegin(GL_QUAD_STRIP);
 	glColor3f(colors[2][0], colors[2][1], colors[2][2]);
 	for (i=0; i<steps; i++){
-		glNormal3f(circle_points[i][0], circle_points[i][1], 1);
+		glNormal3f(circle_points[i][0], circle_points[i][1], 0);
 		glVertex3d(circle_points[i][0],circle_points[i][1], z);
 		glVertex3d(circle_points[i][0],circle_points[i][1], z+h);
 	}
