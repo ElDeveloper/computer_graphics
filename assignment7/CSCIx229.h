@@ -27,8 +27,8 @@ void Project(double fov,double asp,double dim);
 void ErrCheck(const char* where);
 int  LoadOBJ(const char* file);
 
-void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3]);
-void draw_house(double x, double y, double z, float colors[3][3]);
+void draw_cylinder(double x, double y, double z, unsigned int steps, float colors[3][3], unsigned int front_texture, unsigned int body_texture);
+void draw_house(double x, double y, double z, float colors[3][3], unsigned int front_texture, unsigned int body_texture);
 
 #endif
 
