@@ -46,7 +46,7 @@ CSCIx229.a:fatal.o loadtexbmp.o print.o project.o errcheck.o object.o yvbutils.o
 	ar -rcs CSCIx229.a $^
 
 submit: clean
-	zip hw7.zip hw7.c *.c *.h Makefile README.md
+	zip hw7.zip hw7.c *.c *.h Makefile README.md *.bmp
 
 #  Obligatory UNIX inside joke
 love:
