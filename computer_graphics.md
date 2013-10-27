@@ -229,3 +229,15 @@ whether or not points are visible is determined by this. Refer to the
 The trick to clipping is clipping by hemispheres, first one hemisphere and then
 another hemisphere.
 
+*October 3, 2013*
+
+Light
+=====
+
+Ray-tracing useful for light calculations; though it's usually not that useful,
+it's better to do recursive ray-tracing i. e. the objects that appear on the
+scene each generate a set a set of rames back to the eye.
+
+The lighting calculations all get calculated at a vertex, nothing else besides
+that; everything else is an interpolation around that surface.
+
