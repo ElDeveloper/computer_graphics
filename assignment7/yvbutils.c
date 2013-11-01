@@ -56,16 +56,13 @@ void draw_cylinder(double x, double y, double z, unsigned int steps,
 	// draw the strip connecting the two circles using the differential value in
 	// height (Z) between the two circles; the value is the same for all other
 	glBegin(GL_QUAD_STRIP);
-	glEnable(GL_TEXTURE_2D);
-	glTexEnvi(GL_TEXTURE_ENV,GL_TEXTURE_ENV_MODE,GL_MODULATE);
-	glBindTexture(GL_TEXTURE_2D,front_texture); // texture for the front face
 
 	glColor3f(colors[2][0], colors[2][1], colors[2][2]);
 	for (i=0; i<steps; i++){
 		glNormal3f(circle_points[i][0], circle_points[i][1], 0);
 		glVertex3d(circle_points[i][0],circle_points[i][1], z);
 		glVertex3d(circle_points[i][0],circle_points[i][1], z+h);
-		// glTexCoord2f(circle_points[i][0],circle_points[i][1]);
+		glTexCoord2f(circle_points[i][0],circle_points[i][1]);
 	}
 	glVertex3d(circle_points[0][0],circle_points[0][1], z);
 	glVertex3d(circle_points[0][0],circle_points[0][1], z+h);
